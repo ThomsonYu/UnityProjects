@@ -10,20 +10,15 @@ public class PlayerController : MonoBehaviour {
 		
 	}
 	
+    // Called before rendering a frame, where most game code goes
 	// Update is called once per frame
 	void Update () {
 		
 	}
     **/
-
-    /* Called before rendering a frame, where most game code goes
-    void Update()
-    {
-        
-    }
-    */
-
-	public float speed;
+    
+    // Can be seen in Unity
+    public float speed;
 	public Text countText;
 	public Text winText;
 
@@ -67,3 +62,17 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 }
+
+// Performance optimization
+/*
+ * Static colliders shouldn't move, unity is recalculating static colliders
+ * we should set colliders to dynamic
+ * Any game object with a collider and rigid body is considered dynamic
+ * Any game object with a collider but no rigid body is static
+ * For these game objects, add rigid body component and set 'Is Kinematic'
+ * 
+ * Static colliders shouldn't move like walls and floors
+ * Dynamic colliders can move, and have rigid body attached
+ * Standard rigid bodies are moved using physic forces
+ * Kinematic rigid bodies are moved using their transform
+ */
