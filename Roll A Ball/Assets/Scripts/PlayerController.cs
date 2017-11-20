@@ -25,12 +25,20 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody rb;
 	private int count;
 
-	void Start () {
+    void Start () {
 		rb = GetComponent<Rigidbody> ();
 		count = 0;
 		SetCountText ();
 		winText.text = "";
 	}
+
+    void Update()
+    {
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
+    }
 
     // Called just before any physics calculations. Where our physics code goes
     void FixedUpdate()
