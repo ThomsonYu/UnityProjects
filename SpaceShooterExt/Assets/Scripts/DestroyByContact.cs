@@ -25,26 +25,40 @@ public class DestroyByContact : MonoBehaviour {
     // Create tag for boundary
     private void OnTriggerEnter(Collider other)
     {
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy"))
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Boss"))
         {
             return;
         }
 
-		if (explosion != null) {
-			Instantiate(explosion, transform.position, transform.rotation);	
+		if (this.CompareTag ("Boss")) {
+			if (other.CompareTag ("Bolt")) {
+				gameController.decreaseBossLife ();
+				Destroy (other.gameObject);
+				if (gameController.bossDead ()) {
+					Instantiate (explosion, transform.position, transform.rotation);	
+					Destroy (gameObject);
+					gameController.GameOver ();
+				}
+			}
+		} else if (other.CompareTag ("Player")) {
+			gameController.decreasePlayerLife ();
+			Destroy (gameObject);
+			if (gameController.playerDead ()) {
+				Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
+				Destroy (other.gameObject);
+				gameController.GameOver ();
+			}
+		} else {
+			if (explosion != null) {
+				Instantiate (explosion, transform.position, transform.rotation);	
+			}
+
+			if (other.CompareTag ("Bolt")) {
+				gameController.AddScore (scoreValue);
+			}
+			
+			Destroy (other.gameObject);
+			Destroy (gameObject);
 		}
-
-		if (other.CompareTag("Player"))
-        {
-            Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
-            gameController.GameOver();
-        }
-
-		if (other.CompareTag("Bolt")) {
-			gameController.AddScore (scoreValue);
-		}
-
-        Destroy(other.gameObject);
-        Destroy(gameObject);
     }
 }

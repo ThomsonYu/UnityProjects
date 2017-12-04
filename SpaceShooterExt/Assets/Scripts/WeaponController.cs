@@ -8,26 +8,44 @@ public class WeaponController : MonoBehaviour {
 	public Transform[] shotSpawns;
 	public float fireRate;
 	public float delay;
+	public float arcShotDelay;
 	//public AudioClip[] clips;
 
 	private AudioSource audioSource;
+	private int shotType;
 
 	// Invoke repeating for repeating the Fire method
 	void Start () {
 		audioSource = GetComponent<AudioSource> ();
-		InvokeRepeating ("Fire", delay, fireRate);
+		StartCoroutine (Fire());
+		shotType = 1;
 	}
 
-	void Fire()
-	{
-		foreach (var shotSpawn in shotSpawns){
-			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+	IEnumerator Fire(){
+		yield return new WaitForSeconds(delay);
+		while (true) {
+			if (this.CompareTag ("Boss")) {
+				shotType = Random.Range (1, 3);
+				if (shotType == 1) {
+					foreach (var shotSpawn in shotSpawns) {
+						Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+					}
+					audioSource.Play ();
+				}
+				if (shotType == 2) {
+					foreach (var shotSpawn in shotSpawns) {
+						Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+						audioSource.Play ();
+						yield return new WaitForSeconds (arcShotDelay);
+					}
+				}
+			} else {
+				foreach (var shotSpawn in shotSpawns) {
+					Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+				}
+				audioSource.Play ();
+			}
+			yield return new WaitForSeconds (fireRate);
 		}
-
-		/* AudioClip clip = clips[Random.Range(0, clips.length)];
-		 * audioSource.clip = clip;
-		 */
-
-		audioSource.Play ();
 	}
 }
